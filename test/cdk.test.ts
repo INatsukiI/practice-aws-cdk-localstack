@@ -4,14 +4,23 @@ import * as Cdk from '../lib/cdk-stack';
 
 // example test. To run these tests, uncomment this file along with the
 // example resource in lib/cdk-stack.ts
-test('SQS Queue Created', () => {
-  const app = new cdk.App();
-    // WHEN
-  const stack = new Cdk.CdkStack(app, 'MyTestStack');
-    // THEN
-  const template = Template.fromStack(stack);
+describe('S3 Bucket Tests', () => {
+  let app: cdk.App;
+  let stack: Cdk.CdkStack;
+  let template: Template;
 
-  template.hasResourceProperties('AWS::SQS::Queue', {
-    VisibilityTimeout: 300
+  beforeEach(() => {
+    app = new cdk.App();
+    stack = new Cdk.CdkStack(app, 'MyTestStack');
+    template = Template.fromStack(stack);
+  });
+
+  test('S3 Bucket Created with Correct Configuration', () => {
+    template.hasResourceProperties('AWS::S3::Bucket', {
+      BucketName: 'my-bucket-name',
+      VersioningConfiguration: {
+        Status: 'Enabled'
+      }
+    });
   });
 });
